@@ -1,4 +1,4 @@
-Shader "Unlit/ProcesandoSombra"
+Shader "Unlit/RayRunning"
 {
     Properties
     {
@@ -40,6 +40,7 @@ Shader "Unlit/ProcesandoSombra"
                 v2f o;
                 o.vertex = UnityObjectToClipPos(v.vertex);
                 o.uv = TRANSFORM_TEX(v.uv, _MainTex);
+                UNITY_TRANSFER_FOG(o,o.vertex);
                 return o;
             }
 
@@ -47,16 +48,11 @@ Shader "Unlit/ProcesandoSombra"
             {
                 // sample the texture
                 fixed4 col = tex2D(_MainTex, i.uv);
-
-                col = 0.;
                 // apply fog
+                UNITY_APPLY_FOG(i.fogCoord, col);
                 return col;
             }
             ENDCG
         }
     }
 }
-
-//Como puedo generar el concepto de la realidad, con tal de hacer que
-//El factor personal evolucione al grado mas alto, como la narrativa interna se puede aprender
-//como yo puedo sintetizar en la totalidad factores mas caracteristicos.
