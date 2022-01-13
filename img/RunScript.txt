@@ -1,0 +1,320 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
+using System.IO;
+using Probe.Content.detail;
+using RealidadEstructurada;
+
+
+
+public class RunScript : MonoBehaviour
+{  
+
+    public const bool mensajeEjecutador = true;
+
+    List<float> red;
+    List<float> green;
+    List<float> blue;
+    [SerializeField]
+    public int IMG_WIDTH = 1024;
+    [SerializeField]
+    public int IMG_HEIGHT = 720;
+    [SerializeField]
+    public int pattern = 3  ;
+    [SerializeField]
+    public string nameOfFile;
+    [SerializeField]
+    public GameObject thing;
+
+    Texture2D texture;
+
+    public int count = 0 ;
+
+    
+    // Start is called before the first frame update
+    void Start()
+    {
+        thinkTheArt(pattern);
+        doTheArt();
+
+
+        float documentoLeida = 100.0f;
+
+        List<float> blue = new List<float>();
+
+        Debug.Log(documentoLeida);
+
+    }
+
+
+    void thinkTheArt(int type){
+
+        red = new List<float>();
+        green = new List<float>();
+        blue = new List<float>();
+
+        switch(type){
+
+            case(0):
+           
+            default:
+                for (int i = 0; i < IMG_WIDTH; i++){
+                    for(int id = 0; id < IMG_HEIGHT; id++){
+                        red.Add(Random.Range(0.0f,1.0f));
+                        green.Add(Random.Range(0.0f,1.0f));
+                        blue.Add(Random.Range(0.0f,1.0f));
+                    }
+                }
+                break;
+
+            case(1):
+
+                for(int i = 0; i < IMG_WIDTH; i++){
+                    for(int id  = 0; id < IMG_HEIGHT; id++){
+
+                        red.Add((float)id/IMG_HEIGHT);
+                        green.Add(0);
+                        blue.Add(0);
+                    }
+                }
+                break;
+
+            case(2):
+                
+                for(int i = 0; i < IMG_WIDTH; i++){
+                    for(int id = 0 ; id < IMG_HEIGHT; id++){
+                        
+                        if(i < IMG_WIDTH/2){
+                            red.Add((float)0.4);
+                            green.Add((float)0.4);
+                            blue.Add((float)0.4);
+                          
+                        }
+                        else{
+                            red.Add((float)0.9);
+                            green.Add((float)0.9);
+                            blue.Add((float)0.9);
+                            
+                        }
+                           
+                    }
+                }
+                break;
+
+
+/* 
+            case(3):
+
+                for(int i = 0; i < IMG_WIDTH; i++){
+                    for(int id = 0; id< IMG_HEIGHT; id++){
+
+                        if(id < 10  && i < 8){
+                            red.Add(0.2f);
+                            green.Add(0.2f);
+                            blue.Add(0.6f);
+                        }
+                        else{
+                            red.Add(0.7f);
+                            green.Add(0.8f);
+                            blue.Add(0.8f);
+                        }
+                        
+                    }
+                }
+
+                break;
+ */
+            // case(4):
+
+            //     for(int i = 0; i < IMG_WIDTH; i++){
+            //         for(int id = 0; id < IMG_HEIGHT; i++){
+
+            //             // if(id <  )
+                        
+
+
+
+            //         }
+            //     }
+            //     break;
+
+
+        }
+    }
+
+    void doTheArt(){
+
+        texture = new Texture2D (IMG_WIDTH, IMG_HEIGHT, TextureFormat.ARGB32, false);
+
+
+
+
+        float[] redArr = red.ToArray();
+        float[] greenArr = green.ToArray();
+        float[] blueArr = blue.ToArray();
+
+
+        for (int i = 0; i < IMG_WIDTH; i++){
+            for(int id = 0; id < IMG_HEIGHT; id++){
+                texture.SetPixel(i,id,new Color(redArr[i * IMG_HEIGHT + id], greenArr[i * IMG_HEIGHT + id], blueArr[i * IMG_HEIGHT + id]));
+            }
+        }
+        texture.Apply();
+
+
+        //El Vector2(0.5f,0.5f) es un vector que mapea el la totalidad de la imagen en un punto que sirve como 
+        //Punto de composicion de toda la imagen, donde se reunen las interacciones que permiten el movimiento del 
+        //punto de abajo.
+
+        thing.GetComponent<Image>().sprite = Sprite.Create(texture, new Rect(0,0,IMG_WIDTH, IMG_HEIGHT), new Vector2(0.5f, 0.5f));
+    }
+
+
+    void recorredor(){
+
+        Dominio variable = new Dominio();
+
+        variable.general.Add(10.0f);
+
+        Debug.Log(variable.general.ToArray());
+
+        Debug.Log(variable.detail);
+    }
+
+
+    void retornoFuncion(){
+
+        int generandoProceso = 1000;
+
+        int[] generandoContenido = new int[10];
+
+        generandoContenido[0] = 10;
+
+        Debug.Log(generandoContenido[0]);
+
+    }
+    // Update is called once per frame
+
+    static float executionWhileRunning = 0;
+    static bool atendiendoElComportamiento = true;
+    public float numeroDesc = 0;
+
+
+
+    void Update()
+    {
+        byte[] bytes = texture.EncodeToPNG();
+        if(Input.GetKeyUp(KeyCode.Space)){
+           
+            File.WriteAllBytes(Application.dataPath + "/" + nameOfFile + ".png",bytes);
+            
+        }
+
+        //Debug.Log(Application.dataPath + "/" + nameOfFile + ".png");
+
+        //recorredor();
+
+        if(Input.GetKeyUp(KeyCode.Return)){
+
+            thinkTheArt(pattern);
+            
+            doTheArt();
+            
+        }
+
+
+        /* 
+
+        AprendizajeLenguas variableDeAprendizaje = new AprendizajeLenguas();
+        variableDeAprendizaje.expresandoConcepto();
+        variableDeAprendizaje.definicionDeRealidad();
+
+        animandoRealidades();
+
+        Despliege composicionDeLista = new Despliege();
+
+        composicionDeLista.ManejoListaDeControl();
+
+        
+         */
+
+
+            
+
+/*         Debug.Log(Estructura.definiendoAction());
+
+        Debug.Log(Estructura.retornoPosicion());
+        retornoFuncion();
+
+        
+        Debug.Log("Definiendo relacion con la mente");
+
+        count ++;
+        Debug.Log(count);
+
+        float valorDeT = Time.deltaTime;
+
+
+        Debug.Log("Componente Narrativo " + valorDeT.ToString());
+
+        numeroDesc += valorDeT;
+
+        if(numeroDesc > 2){
+            Debug.Log("Here in numeroDescri: " + numeroDesc);
+
+            numeroDesc = 0;    
+        }
+        Debug.Log(numeroDesc);
+
+        testeandoName();
+ */    }
+
+
+    public void testeandoName(){
+        MyClass creativa = new MyClass(10);
+
+        creativa.escribiendoContenido();
+
+        Debug.Log("Aprendiendo a componer acciones   " + (creativa.variableTesteoDeName).ToString());
+
+        MyClient aprendiendoVerdades = new MyClient();
+
+
+        Debug.Log(aprendiendoVerdades.retornoString("This is a cadena"));
+
+        string[] GenerandoMuchoMasPoder = new string[10];
+
+        GenerandoMuchoMasPoder[0] = "Here i can use the code in the developement of the mind";
+
+        print(GenerandoMuchoMasPoder[0]);
+
+        
+    }
+
+    public void animandoRealidades(){
+        print("Como puedo sintetizar accione de caracter codigo");
+        //Como puedo sintetizar las siguiente relaciones con el todo
+        //Las rutas de la verdad que permiten que mi concepto sea mas pleno
+        //Como yo puedo usar los conceptos que me definen con la totalidad.
+
+        print("Como yo puedo trabajar en el desarrollo de un estilo mas alto");
+
+        AprendizajeLenguas creandoAprehensiones = new AprendizajeLenguas();
+
+        creandoAprehensiones.definicionDeRealidad();
+        creandoAprehensiones.expresandoConcepto();
+
+    }
+}
+
+
+//Como yo puedo buscar, el concepto que nos define como realidad, el concepto analitico que nos define como realidad el concepto que nos permite 
+//Determinar el analisis del ahora como yo puedo buscar el concepto que nos ayuda a diferenciar el analiisis de realidad, el concepto que nos ayuda a determinar
+//Propiedades mas especificas el analisis del ahora qeu nos permite diferenciar relaciones del ahora, como yo puedo establecer contenidos mas especificos sobre
+//La realidad 
+
+
+
+
+
